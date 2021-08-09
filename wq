@@ -1,0 +1,20 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch master
+# Your branch is up to date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   Cargo.toml
+#	deleted:    src/abis/ISortedTroves.json
+#	deleted:    src/abis/ITroveManager.json
+#	new file:   src/contracts.rs
+#	new file:   src/get_troves.rs
+#	modified:   src/main.rs
+#	deleted:    src/troves.rs
+#	new file:   src/utils/abis/ISortedTrovesABI.rs
+#	new file:   src/utils/abis/ITroveManagerABI.rs
+#	new file:   src/utils/abis/abis.rs
+#	new file:   src/utils/addresses.rs
+#

@@ -8,24 +8,20 @@ use ethers::{
     utils::Solc,
 };
 use std::convert::TryFrom;
-// use std::{fmt::Debug, marker::PhantomData, sync::Arc};
-mod troves;
+// use tokio::prelude::*;
+mod contracts;
+mod get_troves;
 
-// struct Hat<R> {}
-
-fn main() {
+#[tokio::main]
+async fn main() {
     // connect provider
     let provider =
-        Provider::<Http>::try_from("https://mainnet.infura.io/v3/05357e1281e842ceb4ca24cb22003894");
+        Provider::<Http>::try_from("https://mainnet.infura.io/v3/05357e1281e842ceb4ca24cb22003894")
+            .expect("failed");
 
-    // hack should have type definition
-    // let mut trove_manger: Contract<_>;
-    // let mut sorted_troves: Contract<_>;
-    match provider {
-        // Ok(p) => sorted_troves = troves::get_sorted_troves(p),
-        Ok(p) => troves::get_sorted_troves(p),
-        Err(_) => println!("could not connect provider"),
-    }
+    let [trove_manager, sorted_troves] = contracts::get_contracts(&provider);
+    println!("get troves call");
+    get_troves::get_troves(sorted_troves, trove_manager).await;
 
     // if provide {
     //         println!("provider is connected");
