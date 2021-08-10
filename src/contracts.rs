@@ -25,9 +25,18 @@ fn get_trove_manager(provider: &Provider<Http>) -> Contract<&Provider<Http>> {
     return contract;
 }
 
-pub fn get_contracts(provider: &Provider<Http>) -> [Contract<&Provider<Http>>; 2] {
+fn get_price_feed(provider: &Provider<Http>) -> Contract<&Provider<Http>> {
+    let abi_original: String = abis::price_feed();
+    let abi: Abi = serde_json::from_str(&abi_original).expect("failed");
+    let address: Address = (addresses::contracts()).i_price_feed_v3;
+    let contract = Contract::new(address, abi, provider);
+    return contract;
+}
+
+pub fn get_contracts(provider: &Provider<Http>) -> [Contract<&Provider<Http>>; 3] {
     let static_provider = &provider;
     let trove_manager = get_trove_manager(static_provider);
     let sorted_troves = get_sorted_troves(static_provider);
-    return [trove_manager, sorted_troves];
+    let price_feed = get_price_feed(static_provider);
+    return [trove_manager, sorted_troves, price_feed];
 }
