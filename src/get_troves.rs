@@ -1,12 +1,11 @@
 use ethers::{
-    abi::{Abi, Tokenizable},
     contract::Contract,
+    middleware::SignerMiddleware,
     providers::{Http, Provider},
+    signers::LocalWallet,
     types::Address,
-    utils::format_ether,
 };
 use std::fmt;
-use std::iter::Map;
 
 pub struct Trove {
     pub owner: Address,
@@ -21,7 +20,16 @@ impl fmt::Display for Trove {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "(owner: {},\n collateral: {},\n debt: {},\n stake: {},\n status: {},\n index: {})",
+            r#"
+Trove {{
+    owner:      {},
+    collateral: {},
+    debt:       {},
+    stake:      {},
+    status:     {},
+    index:      {} 
+}}
+            "#,
             self.owner, self.collateral, self.debt, self.stake, self.status, self.index
         )
     }
@@ -53,11 +61,11 @@ fn convert_to_trove(response: (u128, u128, u128, u8, u16), owner: Address) -> Tr
 }
 
 pub async fn run(
-    sorted_troves: Contract<&Provider<Http>>,
-    trove_manager: &Contract<&Provider<Http>>,
+    sorted_troves: Contract<&SignerMiddleware<Provider<Http>, LocalWallet>>,
+    trove_manager: &Contract<&SignerMiddleware<Provider<Http>, LocalWallet>>,
 ) -> Vec<Trove> {
     let mut troves: Vec<Trove> = vec![];
-    println!("entered");
+    // println!("entered");
     let mut last_trove: Address = sorted_troves
         .method::<_, Address>("getLast", ())
         .expect("fail method")
@@ -80,7 +88,7 @@ pub async fn run(
                 .await
                 .expect("fail wait");
         }
-        println!("{}", i);
+        // println!("{}", i);
         if owner_address
             == "0x0000000000000000000000000000000000000000"
                 .parse::<Address>()
@@ -98,14 +106,14 @@ pub async fn run(
         // println!("{:?}", trove_pre);
         let trove: Trove = convert_to_trove(trove_pre, owner_address);
         // println!("{:?}", trove.index);
-        println!("{:?}", owner_address);
+        // println!("{:?}", owner_address);
         troves.push(trove);
         last_trove = owner_address;
         if is_first {
             is_first = false;
         }
 
-        if i > 1 {
+        if i > 19 {
             break;
         }
     }

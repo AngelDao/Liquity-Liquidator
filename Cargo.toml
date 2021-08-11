@@ -10,3 +10,5 @@ edition = "2018"
 ethers = "0.2.2"
 serde_json = "1.0.59"
 tokio = { version = "1", features = ["full"] }
+dotenv = "0.15.0"
+rust-crypto = "0.2"
